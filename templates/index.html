@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cinematic AI Studio</title>
+<meta name="description" content="AI-powered image & video generation studio with MageSpaceAI, WayinAI, and Gemma 4B.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════
+   CSS DESIGN SYSTEM — Cinematic AI Studio
+   ═══════════════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg-primary:#06060b;--bg-secondary:#0d0d15;--bg-tertiary:#13131f;--bg-card:#16162a;
+  --bg-card-hover:#1c1c35;--bg-glass:rgba(20,20,40,0.65);
+  --border-subtle:rgba(120,80,255,0.12);--border-glow:rgba(124,58,237,0.35);
+  --text-primary:#f0eef6;--text-secondary:#9d97b5;--text-muted:#5e587a;
+  --accent-purple:#7c3aed;--accent-blue:#3b82f6;--accent-cyan:#06b6d4;
+  --accent-amber:#f59e0b;--accent-green:#10b981;--accent-red:#ef4444;--accent-pink:#ec4899;
+  --gradient-hero:linear-gradient(135deg,#7c3aed 0%,#3b82f6 50%,#06b6d4 100%);
+  --gradient-warm:linear-gradient(135deg,#f59e0b,#ef4444,#ec4899);
+  --gradient-card:linear-gradient(145deg,rgba(124,58,237,0.08),rgba(59,130,246,0.05));
+  --shadow-glow:0 0 30px rgba(124,58,237,0.15);--shadow-lg:0 20px 60px rgba(0,0,0,0.5);
+  --radius-sm:8px;--radius-md:12px;--radius-lg:16px;--radius-xl:24px;
+  --font-body:'Inter',sans-serif;--font-heading:'Outfit',sans-serif;
+  --transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+html{font-size:15px;scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg-primary);color:var(--text-primary);
+  min-height:100vh;overflow-x:hidden;line-height:1.6}
+body::before{content:'';position:fixed;inset:0;background:
+  radial-gradient(ellipse 800px 600px at 20% 10%,rgba(124,58,237,0.06),transparent),
+  radial-gradient(ellipse 600px 400px at 80% 80%,rgba(59,130,246,0.04),transparent);
+  pointer-events:none;z-index:0}
+
+/* ── Scrollbar ──────────── */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg-secondary)}
+::-webkit-scrollbar-thumb{background:var(--accent-purple);border-radius:4px}
+
+/* ── Typography ─────────── */
+h1,h2,h3,h4{font-family:var(--font-heading);font-weight:700}
+h1{font-size:2rem}h2{font-size:1.5rem}h3{font-size:1.2rem}
+
+/* ── Buttons ────────────── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border:none;
+  border-radius:var(--radius-md);font-family:var(--font-body);font-weight:600;font-size:.875rem;
+  cursor:pointer;transition:var(--transition);text-decoration:none;white-space:nowrap}
+.btn-primary{background:var(--gradient-hero);color:#fff;box-shadow:0 4px 20px rgba(124,58,237,0.3)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(124,58,237,0.45)}
+.btn-secondary{background:var(--bg-card);color:var(--text-primary);border:1px solid var(--border-subtle)}
+.btn-secondary:hover{border-color:var(--border-glow);background:var(--bg-card-hover)}
+.btn-danger{background:rgba(239,68,68,0.15);color:var(--accent-red);border:1px solid rgba(239,68,68,0.25)}
+.btn-danger:hover{background:rgba(239,68,68,0.25)}
+.btn-sm{padding:6px 12px;font-size:.8rem}
+.btn-icon{width:36px;height:36px;padding:0;display:inline-flex;align-items:center;justify-content:center;
+  border-radius:var(--radius-sm);background:var(--bg-card);border:1px solid var(--border-subtle);
+  color:var(--text-secondary);cursor:pointer;transition:var(--transition)}
+.btn-icon:hover{color:var(--text-primary);border-color:var(--border-glow);background:var(--bg-card-hover)}
+
+/* ── Inputs ─────────────── */
+.input,.select,.textarea{width:100%;padding:10px 14px;background:var(--bg-secondary);
+  border:1px solid var(--border-subtle);border-radius:var(--radius-md);color:var(--text-primary);
+  font-family:var(--font-body);font-size:.9rem;transition:var(--transition);outline:none}
+.input:focus,.select:focus,.textarea:focus{border-color:var(--accent-purple);
+  box-shadow:0 0 0 3px rgba(124,58,237,0.15)}
+.textarea{resize:vertical;min-height:80px}
+.select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239d97b5' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;padding-right:36px}
+.select option{background:var(--bg-secondary);color:var(--text-primary)}
+label{display:block;font-size:.8rem;font-weight:600;color:var(--text-secondary);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px}
+.form-group{margin-bottom:14px}
+
+/* ── Badge ──────────────── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:.7rem;
+  font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+.badge-pending{background:rgba(245,158,11,0.15);color:var(--accent-amber)}
+.badge-running{background:rgba(59,130,246,0.15);color:var(--accent-blue);animation:pulse-badge 2s infinite}
+.badge-done{background:rgba(16,185,129,0.15);color:var(--accent-green)}
+.badge-failed{background:rgba(239,68,68,0.15);color:var(--accent-red)}
+@keyframes pulse-badge{0%,100%{opacity:1}50%{opacity:.6}}
+
+/* ═══════════════════════════════════════════════════════════
+   LOGIN SCREEN
+   ═══════════════════════════════════════════════════════════ */
+#login-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+  background:var(--bg-primary);z-index:9999}
+#login-screen::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 900px 700px at 50% 30%,rgba(124,58,237,0.1),transparent),
+  radial-gradient(ellipse 700px 500px at 70% 70%,rgba(59,130,246,0.06),transparent)}
+.login-box{position:relative;width:380px;max-width:90vw;padding:40px;background:var(--bg-glass);
+  backdrop-filter:blur(30px);border:1px solid var(--border-subtle);border-radius:var(--radius-xl);
+  box-shadow:var(--shadow-lg)}
+.login-logo{text-align:center;margin-bottom:30px}
+.login-logo h1{background:var(--gradient-hero);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;
+  font-size:1.8rem;margin-bottom:4px}
+.login-logo p{color:var(--text-muted);font-size:.85rem}
+.login-box .form-group{margin-bottom:18px}
+.login-box .btn{width:100%;justify-content:center;padding:12px;font-size:1rem}
+.login-error{color:var(--accent-red);font-size:.82rem;text-align:center;margin-top:10px;min-height:20px}
+
+/* ═══════════════════════════════════════════════════════════
+   MAIN LAYOUT
+   ═══════════════════════════════════════════════════════════ */
+#app{display:none;min-height:100vh;position:relative;z-index:1}
+.top-bar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;
+  padding:12px 24px;background:rgba(6,6,11,0.85);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border-subtle)}
+.top-bar .logo{font-family:var(--font-heading);font-weight:800;font-size:1.2rem;
+  background:var(--gradient-hero);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.top-bar .logo span{font-weight:400;opacity:0.7}
+.top-bar-right{display:flex;align-items:center;gap:10px}
+.top-bar .hamburger{display:none}
+
+/* ── Nav Tabs ───────────── */
+.nav-tabs{display:flex;gap:2px;padding:0 24px;background:var(--bg-secondary);
+  border-bottom:1px solid var(--border-subtle);overflow-x:auto}
+.nav-tab{padding:12px 20px;font-size:.85rem;font-weight:600;color:var(--text-muted);cursor:pointer;
+  border-bottom:2px solid transparent;transition:var(--transition);white-space:nowrap;
+  display:flex;align-items:center;gap:6px}
+.nav-tab:hover{color:var(--text-secondary)}
+.nav-tab.active{color:var(--accent-purple);border-bottom-color:var(--accent-purple)}
+
+/* ── Tab Content ────────── */
+.tab-content{display:none;padding:24px;max-width:1400px;margin:0 auto;animation:fadeIn .3s ease}
+.tab-content.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ── Hamburger ──────────── */
+.hamburger{flex-direction:column;gap:5px;cursor:pointer;padding:8px;border-radius:var(--radius-sm);
+  background:var(--bg-card);border:1px solid var(--border-subtle)}
+.hamburger:hover{border-color:var(--border-glow)}
+.hamburger span{width:20px;height:2px;background:var(--text-primary);border-radius:2px;transition:var(--transition)}
+@media(max-width:768px){
+  .top-bar .hamburger{display:flex}
+  .nav-tabs{display:none;flex-direction:column;padding:0;position:fixed;top:49px;left:0;right:0;
+    background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);z-index:200;
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);backdrop-filter:blur(20px)}
+  .nav-tabs.open{display:flex}
+  .nav-tab{padding:14px 24px;border-bottom:none;border-left:3px solid transparent}
+  .nav-tab.active{border-left-color:var(--accent-purple);border-bottom:none}
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STUDIO TAB
+   ═══════════════════════════════════════════════════════════ */
+.studio-layout{display:grid;grid-template-columns:360px 1fr;gap:24px}
+@media(max-width:900px){.studio-layout{grid-template-columns:1fr}}
+
+.studio-panel{background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);
+  padding:24px;position:sticky;top:80px;max-height:calc(100vh - 100px);overflow-y:auto}
+.studio-panel h3{margin-bottom:16px;display:flex;align-items:center;gap:8px}
+
+/* Engine toggle */
+.engine-toggle{display:flex;background:var(--bg-secondary);border-radius:var(--radius-md);
+  overflow:hidden;margin-bottom:20px;border:1px solid var(--border-subtle)}
+.engine-btn{flex:1;padding:10px;text-align:center;font-weight:600;font-size:.85rem;cursor:pointer;
+  transition:var(--transition);color:var(--text-muted)}
+.engine-btn.active{background:var(--gradient-hero);color:#fff}
+
+/* ── Task Cards ─────────── */
+.tasks-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.task-card{background:var(--gradient-card);border:1px solid var(--border-subtle);
+  border-radius:var(--radius-lg);overflow:hidden;transition:var(--transition);position:relative}
+.task-card:hover{border-color:var(--border-glow);box-shadow:var(--shadow-glow);transform:translateY(-2px)}
+.task-card-media{width:100%;aspect-ratio:16/9;background:var(--bg-secondary);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.task-card-media img,.task-card-media video{width:100%;height:100%;object-fit:cover}
+.task-card-media .placeholder{color:var(--text-muted);font-size:.8rem;text-align:center}
+.task-card-body{padding:14px}
+.task-card-prompt{font-size:.82rem;color:var(--text-secondary);margin:8px 0;
+  display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  word-break:break-word}
+.task-card-meta{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.task-card-model{font-size:.75rem;color:var(--text-muted)}
+.task-card-actions{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.task-spinner{width:40px;height:40px;border:3px solid var(--border-subtle);
+  border-top-color:var(--accent-purple);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.no-tasks{text-align:center;padding:60px 20px;color:var(--text-muted);grid-column:1/-1;width:100%}
+.no-tasks .icon{font-size:3rem;margin-bottom:12px}
+
+/* ═══════════════════════════════════════════════════════════
+   GALLERY TAB
+   ═══════════════════════════════════════════════════════════ */
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.gallery-card{background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);
+  overflow:hidden;transition:var(--transition)}
+.gallery-card:hover{border-color:var(--border-glow);box-shadow:var(--shadow-glow)}
+.gallery-card-media{width:100%;aspect-ratio:16/10;background:var(--bg-secondary);overflow:hidden}
+.gallery-card-media img,.gallery-card-media video{width:100%;height:100%;object-fit:cover}
+.gallery-card-body{padding:14px}
+.gallery-card-prompt{font-size:.82rem;color:var(--text-secondary);margin-bottom:8px;cursor:pointer;
+  display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.gallery-card-actions{display:flex;gap:4px;flex-wrap:wrap}
+
+/* ═══════════════════════════════════════════════════════════
+   PROMPTS TAB
+   ═══════════════════════════════════════════════════════════ */
+.prompt-save-form{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
+.prompt-save-form .textarea{flex:1;min-width:200px}
+.prompts-list{display:grid;gap:10px}
+.prompt-item{display:flex;align-items:flex-start;gap:12px;padding:14px;background:var(--bg-card);
+  border:1px solid var(--border-subtle);border-radius:var(--radius-md);transition:var(--transition)}
+.prompt-item:hover{border-color:var(--border-glow)}
+.prompt-text{flex:1;font-size:.9rem;color:var(--text-secondary);word-break:break-word;cursor:pointer}
+.prompt-label{font-size:.75rem;color:var(--accent-amber);font-weight:600;margin-bottom:4px}
+
+/* ═══════════════════════════════════════════════════════════
+   EDITOR TAB
+   ═══════════════════════════════════════════════════════════ */
+.editor-preview{width:100%;max-width:800px;margin:0 auto 24px;aspect-ratio:16/9;
+  background:var(--bg-secondary);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);
+  overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
+.editor-preview img,.editor-preview video{width:100%;height:100%;object-fit:contain}
+.editor-controls{display:flex;justify-content:center;gap:10px;margin-bottom:24px}
+.timeline-wrap{background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);
+  padding:20px;min-height:120px}
+.timeline-items{display:flex;gap:10px;overflow-x:auto;padding:10px 0;min-height:80px;align-items:center}
+.timeline-item{flex-shrink:0;width:120px;height:70px;background:var(--bg-secondary);
+  border:2px solid var(--border-subtle);border-radius:var(--radius-sm);overflow:hidden;
+  cursor:pointer;transition:var(--transition);position:relative}
+.timeline-item.active{border-color:var(--accent-purple);box-shadow:0 0 12px rgba(124,58,237,0.3)}
+.timeline-item img,.timeline-item video{width:100%;height:100%;object-fit:cover}
+.timeline-item .remove{position:absolute;top:2px;right:2px;width:18px;height:18px;
+  background:rgba(239,68,68,0.8);color:#fff;border:none;border-radius:50%;font-size:.6rem;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:var(--transition)}
+.timeline-item:hover .remove{opacity:1}
+.timeline-add{flex-shrink:0;width:120px;height:70px;border:2px dashed var(--border-subtle);
+  border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;
+  color:var(--text-muted);cursor:pointer;transition:var(--transition);font-size:1.5rem}
+.timeline-add:hover{border-color:var(--accent-purple);color:var(--accent-purple)}
+
+/* ═══════════════════════════════════════════════════════════
+   GEMMA TAB
+   ═══════════════════════════════════════════════════════════ */
+.chat-layout{max-width:800px;margin:0 auto;display:flex;flex-direction:column;height:calc(100vh - 200px)}
+.chat-messages{flex:1;overflow-y:auto;padding:20px 0;display:flex;flex-direction:column;gap:12px}
+.chat-msg{max-width:80%;padding:12px 16px;border-radius:var(--radius-lg);font-size:.9rem;line-height:1.5;
+  animation:msgIn .3s ease;word-break:break-word}
+.chat-msg.user{align-self:flex-end;background:var(--accent-purple);color:#fff;border-bottom-right-radius:4px}
+.chat-msg.assistant{align-self:flex-start;background:var(--bg-card);color:var(--text-primary);
+  border:1px solid var(--border-subtle);border-bottom-left-radius:4px}
+.chat-msg .img-tag{font-size:.7rem;color:rgba(255,255,255,0.6);margin-top:4px}
+@keyframes msgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.chat-input-area{display:flex;gap:10px;padding-top:14px;border-top:1px solid var(--border-subtle);align-items:flex-end}
+.chat-input-area .textarea{flex:1;min-height:44px;max-height:140px;resize:none}
+.chat-img-preview{width:48px;height:48px;border-radius:var(--radius-sm);overflow:hidden;
+  position:relative;border:1px solid var(--border-subtle)}
+.chat-img-preview img{width:100%;height:100%;object-fit:cover}
+.chat-img-preview .remove-chat-img{position:absolute;inset:0;background:rgba(0,0,0,0.6);
+  display:flex;align-items:center;justify-content:center;opacity:0;cursor:pointer;color:#fff;
+  transition:var(--transition)}
+.chat-img-preview:hover .remove-chat-img{opacity:1}
+.chat-empty{text-align:center;padding:60px;color:var(--text-muted)}
+
+/* ═══════════════════════════════════════════════════════════
+   MODALS
+   ═══════════════════════════════════════════════════════════ */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);
+  z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius-xl);
+  width:100%;max-width:700px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:var(--shadow-lg);animation:modalIn .3s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:none}}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;
+  border-bottom:1px solid var(--border-subtle)}
+.modal-header h3{font-family:var(--font-heading)}
+.modal-body{padding:24px;overflow-y:auto;flex:1}
+.modal-close{background:none;border:none;color:var(--text-muted);font-size:1.4rem;cursor:pointer;
+  transition:var(--transition)}
+.modal-close:hover{color:var(--text-primary)}
+
+/* Fullscreen modal */
+.fullscreen-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:1001;
+  display:none;align-items:center;justify-content:center;cursor:pointer}
+.fullscreen-overlay.open{display:flex}
+.fullscreen-overlay img,.fullscreen-overlay video{max-width:95vw;max-height:95vh;object-fit:contain}
+
+/* ── Logs ───────────────── */
+.log-list{font-family:'Courier New',monospace;font-size:.8rem;color:var(--text-secondary);
+  background:var(--bg-secondary);padding:16px;border-radius:var(--radius-md);
+  max-height:400px;overflow-y:auto;line-height:1.8}
+
+/* ── Gallery source picker ── */
+.source-picker{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;
+  max-height:400px;overflow-y:auto}
+.source-item{aspect-ratio:16/10;background:var(--bg-secondary);border:2px solid var(--border-subtle);
+  border-radius:var(--radius-sm);overflow:hidden;cursor:pointer;transition:var(--transition)}
+.source-item:hover{border-color:var(--accent-purple)}
+.source-item img,.source-item video{width:100%;height:100%;object-fit:cover}
+
+/* ═══════════════════════════════════════════════════════════
+   IMAGE UPLOAD ZONES
+   ═══════════════════════════════════════════════════════════ */
+.upload-zone{border:2px dashed var(--border-subtle);border-radius:var(--radius-md);padding:20px;
+  text-align:center;cursor:pointer;transition:var(--transition);color:var(--text-muted);
+  font-size:.82rem;position:relative;min-height:80px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:6px}
+.upload-zone:hover{border-color:var(--accent-purple);color:var(--accent-purple)}
+.upload-zone.has-image{border-style:solid;border-color:var(--accent-green)}
+.upload-zone img{max-width:100%;max-height:120px;object-fit:contain;border-radius:var(--radius-sm)}
+.upload-zone input[type=file]{display:none}
+.upload-zone .clear-upload{position:absolute;top:4px;right:4px;z-index:2}
+
+/* ═══════════════════════════════════════════════════════════
+   TOAST
+   ═══════════════════════════════════════════════════════════ */
+.toast-container{position:fixed;bottom:24px;right:24px;z-index:2000;display:flex;flex-direction:column;gap:8px}
+.toast{padding:12px 20px;background:var(--bg-card);border:1px solid var(--border-subtle);
+  border-radius:var(--radius-md);color:var(--text-primary);font-size:.85rem;
+  box-shadow:var(--shadow-lg);animation:toastIn .3s ease;max-width:360px}
+.toast.success{border-left:3px solid var(--accent-green)}
+.toast.error{border-left:3px solid var(--accent-red)}
+.toast.info{border-left:3px solid var(--accent-blue)}
+@keyframes toastIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+
+/* ─── Ref images container ── */
+.ref-images-container{display:flex;gap:8px;flex-wrap:wrap}
+.ref-images-container .upload-zone{width:100px;height:100px;min-height:unset;padding:8px}
+
+/* ─── Checkbox toggle ──── */
+.toggle-wrap{display:flex;align-items:center;gap:10px}
+.toggle{position:relative;width:42px;height:24px;background:var(--bg-secondary);border-radius:12px;
+  cursor:pointer;border:1px solid var(--border-subtle);transition:var(--transition)}
+.toggle.on{background:var(--accent-purple);border-color:var(--accent-purple)}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;
+  background:#fff;border-radius:50%;transition:var(--transition)}
+.toggle.on::after{left:21px}
+
+/* ── Responsive polish ──── */
+@media(max-width:768px){
+  .top-bar{padding:10px 16px}
+  .tab-content{padding:16px}
+  .studio-layout{grid-template-columns:1fr}
+  .studio-panel{position:static;max-height:none}
+  .tasks-grid{grid-template-columns:1fr}
+  .gallery-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+  .chat-msg{max-width:90%}
+  .prompt-save-form{flex-direction:column}
+  .modal{max-width:95vw}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     LOGIN SCREEN
+     ═══════════════════════════════════════ -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <h1>🎬 Cinematic AI</h1>
+      <p>Studio'ya giriş yapın</p>
+    </div>
+    <div class="form-group">
+      <label for="login-user">Kullanıcı Adı</label>
+      <input class="input" type="text" id="login-user" placeholder="admin" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label for="login-pass">Şifre</label>
+      <input class="input" type="password" id="login-pass" placeholder="••••" autocomplete="current-password">
+    </div>
+    <button class="btn btn-primary" id="login-btn" onclick="doLogin()">Giriş Yap</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MAIN APP
+     ═══════════════════════════════════════ -->
+<div id="app">
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="logo">🎬 Cinematic <span>AI Studio</span></div>
+    <div class="top-bar-right">
+      <div class="hamburger" id="hamburger" onclick="toggleMobileNav()">
+        <span></span><span></span><span></span>
+      </div>
+      <button class="btn btn-sm btn-secondary" onclick="doLogout()">Çıkış</button>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="nav-tabs" id="nav-tabs">
+    <div class="nav-tab active" data-tab="studio" onclick="switchTab('studio')">🎬 Studio</div>
+    <div class="nav-tab" data-tab="gallery" onclick="switchTab('gallery')">🖼️ Galeri</div>
+    <div class="nav-tab" data-tab="prompts" onclick="switchTab('prompts')">📝 Promptlar</div>
+    <div class="nav-tab" data-tab="editor" onclick="switchTab('editor')">🎞️ Editör</div>
+    <div class="nav-tab" data-tab="gemma" onclick="switchTab('gemma')">🤖 Gemma</div>
+  </div>
+
+  <!-- ═══ STUDIO TAB ═══ -->
+  <div class="tab-content active" id="tab-studio">
+    <div class="studio-layout">
+      <!-- Left Panel: Generation Config -->
+      <div class="studio-panel">
+        <h3>⚡ Yeni Üretim</h3>
+
+        <!-- Engine Toggle -->
+        <div class="engine-toggle">
+          <div class="engine-btn active" data-engine="mage" onclick="setEngine('mage')">🖼️ MageSpace</div>
+          <div class="engine-btn" data-engine="wayin" onclick="setEngine('wayin')">🎥 WayinAI</div>
+        </div>
+
+        <!-- MAGE CONFIG -->
+        <div id="mage-config">
+          <div class="form-group">
+            <label>Model</label>
+            <select class="select" id="mage-model" onchange="onMageModelChange()"></select>
+          </div>
+          <div class="form-group">
+            <label>En Boy Oranı</label>
+            <select class="select" id="mage-ar"></select>
+          </div>
+          <div class="form-group">
+            <label>Çözünürlük</label>
+            <select class="select" id="mage-res"></select>
+          </div>
+          <div class="form-group">
+            <label>Prompt</label>
+            <textarea class="textarea" id="mage-prompt" placeholder="Bir sahne hayal edin..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Referans Görsel (Opsiyonel)</label>
+            <div class="upload-zone" id="mage-ref-zone" onclick="document.getElementById('mage-ref-input').click()">
+              <span>📁 Görsel yükle veya sürükle</span>
+              <input type="file" id="mage-ref-input" accept="image/*" onchange="handleMageRef(this)">
+            </div>
+          </div>
+          <button class="btn btn-primary" style="width:100%" onclick="startMageTask()">🚀 Görsel Üret</button>
+        </div>
+
+        <!-- WAYIN CONFIG -->
+        <div id="wayin-config" style="display:none">
+          <div class="form-group">
+            <label>Video Türü</label>
+            <select class="select" id="wayin-vtype" onchange="onWayinTypeChange()"></select>
+          </div>
+          <div class="form-group">
+            <label>Grup</label>
+            <select class="select" id="wayin-group" onchange="onWayinGroupChange()"></select>
+          </div>
+          <div class="form-group">
+            <label>Model</label>
+            <select class="select" id="wayin-model" onchange="onWayinModelChange()"></select>
+          </div>
+          <div class="form-group">
+            <label>En Boy Oranı</label>
+            <select class="select" id="wayin-ratio"></select>
+          </div>
+          <div class="form-group">
+            <label>Çözünürlük</label>
+            <select class="select" id="wayin-resolution"></select>
+          </div>
+          <div class="form-group">
+            <label>Süre (sn)</label>
+            <select class="select" id="wayin-duration"></select>
+          </div>
+          <div class="form-group" id="wayin-audio-wrap" style="display:none">
+            <div class="toggle-wrap">
+              <div class="toggle" id="wayin-audio-toggle" onclick="toggleSwitch(this)"></div>
+              <span style="font-size:.85rem">Ses Oluştur</span>
+            </div>
+          </div>
+          <div class="form-group" id="wayin-camera-wrap" style="display:none">
+            <div class="toggle-wrap">
+              <div class="toggle" id="wayin-camera-toggle" onclick="toggleSwitch(this)"></div>
+              <span style="font-size:.85rem">Kamera Sabit</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Prompt</label>
+            <textarea class="textarea" id="wayin-prompt" placeholder="Videonuzu tanımlayın..."></textarea>
+          </div>
+
+          <!-- Image uploads (conditional) -->
+          <div id="wayin-start-frame-wrap" style="display:none">
+            <div class="form-group">
+              <label>Başlangıç Karesi</label>
+              <div class="upload-zone" id="wayin-start-zone" onclick="document.getElementById('wayin-start-input').click()">
+                <span>📁 Görsel yükle</span>
+                <input type="file" id="wayin-start-input" accept="image/*" onchange="handleUpload(this,'wayin-start-zone','wayinStartB64')">
+              </div>
+            </div>
+          </div>
+          <div id="wayin-end-frame-wrap" style="display:none">
+            <div class="form-group">
+              <label>Son Kare</label>
+              <div class="upload-zone" id="wayin-end-zone" onclick="document.getElementById('wayin-end-input').click()">
+                <span>📁 Görsel yükle</span>
+                <input type="file" id="wayin-end-input" accept="image/*" onchange="handleUpload(this,'wayin-end-zone','wayinEndB64')">
+              </div>
+            </div>
+          </div>
+          <div id="wayin-ref-images-wrap" style="display:none">
+            <div class="form-group">
+              <label>Referans Görseller</label>
+              <div class="ref-images-container" id="wayin-ref-container"></div>
+              <button class="btn btn-sm btn-secondary" style="margin-top:8px" onclick="addRefImageSlot()">+ Referans Ekle</button>
+            </div>
+          </div>
+
+          <!-- Invite Mode -->
+          <div class="form-group" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border-subtle)">
+            <div class="toggle-wrap" style="margin-bottom:10px">
+              <div class="toggle" id="wayin-invite-toggle" onclick="toggleSwitch(this);document.getElementById('wayin-invite-count-wrap').style.display=this.classList.contains('on')?'block':'none'"></div>
+              <span style="font-size:.85rem">🔗 Invite Zinciri Modu</span>
+            </div>
+            <div id="wayin-invite-count-wrap" style="display:none">
+              <label>Alt Hesap Sayısı</label>
+              <input class="input" type="number" id="wayin-invite-count" value="5" min="1" max="20" style="max-width:120px">
+            </div>
+          </div>
+
+          <button class="btn btn-primary" style="width:100%" onclick="startWayinTask()">🚀 Video Üret</button>
+        </div>
+      </div>
+
+      <!-- Right: Tasks Grid -->
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <h2>Aktif Görevler</h2>
+          <button class="btn btn-sm btn-secondary" onclick="refreshTasks()">↻ Yenile</button>
+        </div>
+        <div class="tasks-grid" id="tasks-grid">
+          <div class="no-tasks"><div class="icon">🎬</div><p>Henüz görev yok. Sol panelden yeni bir üretim başlatın.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ GALLERY TAB ═══ -->
+  <div class="tab-content" id="tab-gallery">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <h2>🖼️ Galeri</h2>
+      <button class="btn btn-sm btn-secondary" onclick="loadGallery()">↻ Yenile</button>
+    </div>
+    <div class="gallery-grid" id="gallery-grid">
+      <div class="no-tasks"><div class="icon">🖼️</div><p>Galeri boş. Üretim tamamlandığında burada görünür.</p></div>
+    </div>
+  </div>
+
+  <!-- ═══ PROMPTS TAB ═══ -->
+  <div class="tab-content" id="tab-prompts">
+    <h2 style="margin-bottom:20px">📝 Prompt Kütüphanesi</h2>
+    <div class="prompt-save-form">
+      <input class="input" id="prompt-label" placeholder="Etiket (opsiyonel)" style="max-width:200px">
+      <textarea class="textarea" id="prompt-text" placeholder="Prompt metni..." style="min-height:44px"></textarea>
+      <button class="btn btn-primary" onclick="savePrompt()">Kaydet</button>
+    </div>
+    <div class="prompts-list" id="prompts-list">
+      <div class="no-tasks"><div class="icon">📝</div><p>Henüz kaydedilmiş prompt yok.</p></div>
+    </div>
+  </div>
+
+  <!-- ═══ EDITOR TAB ═══ -->
+  <div class="tab-content" id="tab-editor">
+    <h2 style="margin-bottom:20px">🎞️ Timeline Editör</h2>
+    <div class="editor-preview" id="editor-preview">
+      <span style="color:var(--text-muted);font-size:.9rem">Önizleme alanı</span>
+    </div>
+    <div class="editor-controls">
+      <button class="btn btn-secondary" onclick="playTimeline()">▶ Oynat</button>
+      <button class="btn btn-secondary" onclick="stopTimeline()">⏹ Durdur</button>
+      <button class="btn btn-primary" onclick="exportTimeline()">📥 MP4 İndir</button>
+    </div>
+    <div class="timeline-wrap">
+      <h3 style="margin-bottom:12px">Timeline</h3>
+      <div class="timeline-items" id="timeline-items">
+        <div class="timeline-add" onclick="openTimelineSourcePicker()">+</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ GEMMA TAB ═══ -->
+  <div class="tab-content" id="tab-gemma">
+    <div class="chat-layout">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <h2>🤖 Gemma 4B Chat</h2>
+        <button class="btn btn-sm btn-danger" onclick="clearChat()">Temizle</button>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-empty">Gemma ile sohbet etmeye başlayın 🚀</div>
+      </div>
+      <div class="chat-input-area">
+        <div id="chat-img-box" style="display:none">
+          <div class="chat-img-preview">
+            <img id="chat-img-thumb" src="" alt="">
+            <div class="remove-chat-img" onclick="removeChatImage()">✕</div>
+          </div>
+        </div>
+        <button class="btn-icon" onclick="document.getElementById('chat-img-input').click()" title="Görsel ekle">🖼️</button>
+        <input type="file" id="chat-img-input" accept="image/*" style="display:none" onchange="handleChatImage(this)">
+        <textarea class="textarea" id="chat-input" placeholder="Mesajınızı yazın..." rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
+        <button class="btn btn-primary" onclick="sendChat()">Gönder</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODALS ═══ -->
+<div class="modal-overlay" id="modal-logs">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>📋 Görev Logları</h3>
+      <button class="modal-close" onclick="closeModal('modal-logs')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="log-list" id="log-content">Yükleniyor...</div>
+    </div>
+  </div>
+</div>
+
+<div class="fullscreen-overlay" id="fullscreen-view" onclick="closeFullscreen()">
+  <div id="fullscreen-content"></div>
+</div>
+
+<div class="modal-overlay" id="modal-timeline-source">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>🖼️ Timeline'a Ekle</h3>
+      <button class="modal-close" onclick="closeModal('modal-timeline-source')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="source-picker" id="source-picker-grid">Yükleniyor...</div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════════════════════════════════════ -->
+<script>
+/* ── State ────────────────────────── */
+let currentEngine = 'mage';
+let mageModels = {};
+let wayinModels = {};
+var mageRefB64 = null;
+var wayinStartB64 = null;
+var wayinEndB64 = null;
+var wayinRefImages = [];
+var chatImageB64 = null;
+let timelineItems = []; // [{type:'image'|'video', url:'...', prompt:''}]
+let timelinePlayIdx = -1;
+let timelineTimer = null;
+let taskPollTimer = null;
+let lastTasksHash = '';
+
+/* ── Helpers ──────────────────────── */
+function api(url, opts = {}) {
+  return fetch(url, {
+    headers: {'Content-Type': 'application/json'},
+    credentials: 'same-origin',
+    ...opts
+  }).then(r => {
+    if (r.status === 401) { showLogin(); throw new Error('Unauthorized'); }
+    return r.json();
+  });
+}
+
+function toast(msg, type = 'info') {
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  document.getElementById('toast-container').appendChild(el);
+  setTimeout(() => el.remove(), 4000);
+}
+
+function proxyUrl(url) {
+  if (!url) return '';
+  return '/api/proxy?url=' + encodeURIComponent(url);
+}
+
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => toast('Kopyalandı!', 'success'));
+}
+
+function populateSelect(sel, options, selected) {
+  const el = typeof sel === 'string' ? document.getElementById(sel) : sel;
+  el.innerHTML = options.map(o => `<option value="${o}" ${o === selected ? 'selected' : ''}>${o}</option>`).join('');
+}
+
+function toggleSwitch(el) {
+  el.classList.toggle('on');
+}
+
+/* ── Auth ─────────────────────────── */
+function showLogin() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+}
+
+function showApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  initApp();
+}
+
+async function doLogin() {
+  const user = document.getElementById('login-user').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  try {
+    const res = await api('/api/login', { method: 'POST', body: JSON.stringify({ username: user, password: pass }) });
+    if (res.ok) showApp();
+    else document.getElementById('login-error').textContent = res.error || 'Giriş başarısız';
+  } catch(e) {
+    document.getElementById('login-error').textContent = 'Bağlantı hatası';
+  }
+}
+
+async function doLogout() {
+  await api('/api/logout');
+  showLogin();
+  stopTaskPolling();
+}
+
+async function checkAuth() {
+  try {
+    const r = await api('/api/auth-check');
+    if (r.logged_in) showApp();
+    else showLogin();
+  } catch { showLogin(); }
+}
+
+document.getElementById('login-pass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+/* ── Nav ──────────────────────────── */
+function switchTab(name) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.toggle('active', t.id === 'tab-' + name));
+  document.getElementById('nav-tabs').classList.remove('open');
+  if (name === 'gallery') loadGallery();
+  if (name === 'prompts') loadPrompts();
+  if (name === 'gemma') loadChatHistory();
+}
+
+function toggleMobileNav() {
+  document.getElementById('nav-tabs').classList.toggle('open');
+}
+
+/* ── Init ─────────────────────────── */
+async function initApp() {
+  await Promise.all([loadMageModels(), loadWayinModels()]);
+  refreshTasks();
+  startTaskPolling();
+}
+
+async function loadMageModels() {
+  try {
+    mageModels = await api('/api/mage/models');
+    const sel = document.getElementById('mage-model');
+    sel.innerHTML = Object.entries(mageModels).map(([k, v]) =>
+      `<option value="${k}">${v.name}</option>`
+    ).join('');
+    onMageModelChange();
+  } catch(e) { console.error('Mage models error', e); }
+}
+
+function onMageModelChange() {
+  const key = document.getElementById('mage-model').value;
+  const m = mageModels[key];
+  if (!m) return;
+  populateSelect('mage-ar', m.aspect_ratios, m.aspect_ratios[0]);
+  populateSelect('mage-res', m.resolutions, m.resolutions[0]);
+}
+
+async function loadWayinModels() {
+  try {
+    wayinModels = await api('/api/wayin/models');
+    const vtype = document.getElementById('wayin-vtype');
+    vtype.innerHTML = Object.keys(wayinModels).map(k => `<option value="${k}">${k}</option>`).join('');
+    onWayinTypeChange();
+  } catch(e) { console.error('Wayin models error', e); }
+}
+
+function onWayinTypeChange() {
+  const vt = document.getElementById('wayin-vtype').value;
+  const groups = Object.keys(wayinModels[vt] || {});
+  populateSelect('wayin-group', groups, groups[0]);
+
+  // Show/hide image sections BEFORE cascade so onWayinModelChange can override end_frame
+  const isImg2Vid = vt === 'Görüntüden Videoya';
+  const isRef2Vid = vt === 'Referans Görselden Videoya';
+  document.getElementById('wayin-start-frame-wrap').style.display = isImg2Vid ? 'block' : 'none';
+  document.getElementById('wayin-end-frame-wrap').style.display = 'none';
+  document.getElementById('wayin-ref-images-wrap').style.display = isRef2Vid ? 'block' : 'none';
+
+  // Cascade AFTER visibility is set
+  onWayinGroupChange();
+}
+
+function onWayinGroupChange() {
+  const vt = document.getElementById('wayin-vtype').value;
+  const grp = document.getElementById('wayin-group').value;
+  const models = wayinModels[vt]?.[grp] || [];
+  const sel = document.getElementById('wayin-model');
+  sel.innerHTML = models.map((m, i) => `<option value="${i}">${m.name}</option>`).join('');
+  onWayinModelChange();
+}
+
+function onWayinModelChange() {
+  const vt = document.getElementById('wayin-vtype').value;
+  const grp = document.getElementById('wayin-group').value;
+  const idx = parseInt(document.getElementById('wayin-model').value) || 0;
+  const m = wayinModels[vt]?.[grp]?.[idx];
+  if (!m) return;
+
+  populateSelect('wayin-ratio', m.ratios, m.ratios[0]);
+  populateSelect('wayin-resolution', m.resolutions, m.resolutions[0]);
+  populateSelect('wayin-duration', m.durations, m.durations[0]);
+
+  // Audio toggle
+  const audioWrap = document.getElementById('wayin-audio-wrap');
+  audioWrap.style.display = m.audio ? 'block' : 'none';
+  if (!m.audio) document.getElementById('wayin-audio-toggle').classList.remove('on');
+
+  // Camera fixed toggle
+  const camWrap = document.getElementById('wayin-camera-wrap');
+  camWrap.style.display = m.camera_fixed ? 'block' : 'none';
+  if (!m.camera_fixed) document.getElementById('wayin-camera-toggle').classList.remove('on');
+
+  // Last frame (img2vid only)
+  const vtype = document.getElementById('wayin-vtype').value;
+  if (vtype === 'Görüntüden Videoya' && m.last_frame) {
+    document.getElementById('wayin-end-frame-wrap').style.display = 'block';
+  } else {
+    document.getElementById('wayin-end-frame-wrap').style.display = 'none';
+  }
+}
+
+/* ── Engine Toggle ────────────────── */
+function setEngine(eng) {
+  currentEngine = eng;
+  document.querySelectorAll('.engine-btn').forEach(b => b.classList.toggle('active', b.dataset.engine === eng));
+  document.getElementById('mage-config').style.display = eng === 'mage' ? 'block' : 'none';
+  document.getElementById('wayin-config').style.display = eng === 'wayin' ? 'block' : 'none';
+}
+
+/* ── File Upload ──────────────────── */
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function handleMageRef(input) {
+  if (!input.files[0]) return;
+  mageRefB64 = await fileToBase64(input.files[0]);
+  const zone = document.getElementById('mage-ref-zone');
+  zone.innerHTML = `<img src="${mageRefB64}" alt="ref"><button class="btn btn-sm btn-danger clear-upload" onclick="clearMageRef(event)">✕</button>
+    <input type="file" id="mage-ref-input" accept="image/*" onchange="handleMageRef(this)">`;
+  zone.classList.add('has-image');
+}
+
+function clearMageRef(e) {
+  e.stopPropagation();
+  mageRefB64 = null;
+  const zone = document.getElementById('mage-ref-zone');
+  zone.innerHTML = `<span>📁 Görsel yükle veya sürükle</span>
+    <input type="file" id="mage-ref-input" accept="image/*" onchange="handleMageRef(this)">`;
+  zone.classList.remove('has-image');
+}
+
+async function handleUpload(input, zoneId, varName) {
+  if (!input.files[0]) return;
+  const b64 = await fileToBase64(input.files[0]);
+  window[varName] = b64;
+  const zone = document.getElementById(zoneId);
+  const inputId = input.id;
+  zone.innerHTML = `<img src="${b64}" alt="upload"><button class="btn btn-sm btn-danger clear-upload" onclick="clearUpload(event,'${zoneId}','${varName}','${inputId}')">✕</button>
+    <input type="file" id="${inputId}" accept="image/*" onchange="handleUpload(this,'${zoneId}','${varName}')">`;
+  zone.classList.add('has-image');
+}
+
+function clearUpload(e, zoneId, varName, inputId) {
+  e.stopPropagation();
+  window[varName] = null;
+  const zone = document.getElementById(zoneId);
+  zone.innerHTML = `<span>📁 Görsel yükle</span>
+    <input type="file" id="${inputId}" accept="image/*" onchange="handleUpload(this,'${zoneId}','${varName}')">`;
+  zone.classList.remove('has-image');
+}
+
+/* ── Reference Images (multi) ─────── */
+let refSlotCount = 0;
+function addRefImageSlot() {
+  const container = document.getElementById('wayin-ref-container');
+  const idx = refSlotCount++;
+  const div = document.createElement('div');
+  div.innerHTML = `<div class="upload-zone" id="wayin-ref-zone-${idx}" onclick="document.getElementById('wayin-ref-input-${idx}').click()" style="width:100px;height:100px;min-height:unset;padding:8px">
+    <span style="font-size:1.2rem">+</span>
+    <input type="file" id="wayin-ref-input-${idx}" accept="image/*" onchange="handleRefUpload(this,${idx})">
+  </div>`;
+  container.appendChild(div);
+}
+
+async function handleRefUpload(input, idx) {
+  if (!input.files[0]) return;
+  const b64 = await fileToBase64(input.files[0]);
+  wayinRefImages[idx] = b64;
+  const zone = document.getElementById(`wayin-ref-zone-${idx}`);
+  zone.innerHTML = `<img src="${b64}" alt="ref" style="max-width:100%;max-height:100%;object-fit:cover;border-radius:4px">
+    <input type="file" id="wayin-ref-input-${idx}" accept="image/*" onchange="handleRefUpload(this,${idx})">`;
+  zone.classList.add('has-image');
+}
+
+/* ── Use result as reference ──────── */
+function useAsReference(url, type) {
+  if (type === 'image') {
+    // For mage: set as reference image
+    setEngine('mage');
+    switchTab('studio');
+    mageRefB64 = url; // URL, not base64 — backend handles both
+    const zone = document.getElementById('mage-ref-zone');
+    zone.innerHTML = `<img src="${proxyUrl(url)}" alt="ref"><button class="btn btn-sm btn-danger clear-upload" onclick="clearMageRef(event)">✕</button>
+      <input type="file" id="mage-ref-input" accept="image/*" onchange="handleMageRef(this)">`;
+    zone.classList.add('has-image');
+    toast('Referans görsel ayarlandı', 'success');
+  } else {
+    // For video start frame
+    setEngine('wayin');
+    switchTab('studio');
+    document.getElementById('wayin-vtype').value = 'Görüntüden Videoya';
+    onWayinTypeChange();
+    toast('Video başlangıç karesi için görseli manuel yükleyin', 'info');
+  }
+}
+
+function useAsStartFrame(url) {
+  setEngine('wayin');
+  switchTab('studio');
+  document.getElementById('wayin-vtype').value = 'Görüntüden Videoya';
+  onWayinTypeChange();
+  wayinStartB64 = url;
+  const zone = document.getElementById('wayin-start-zone');
+  zone.innerHTML = `<img src="${proxyUrl(url)}" alt="start"><button class="btn btn-sm btn-danger clear-upload" onclick="clearUpload(event,'wayin-start-zone','wayinStartB64','wayin-start-input')">✕</button>
+    <input type="file" id="wayin-start-input" accept="image/*" onchange="handleUpload(this,'wayin-start-zone','wayinStartB64')">`;
+  zone.classList.add('has-image');
+  toast('Başlangıç karesi ayarlandı', 'success');
+}
+
+/* ── Task Creation ────────────────── */
+async function startMageTask() {
+  const prompt = document.getElementById('mage-prompt').value.trim();
+  if (!prompt) { toast('Prompt gerekli!', 'error'); return; }
+  const data = {
+    type: 'mage',
+    model: document.getElementById('mage-model').value,
+    prompt: prompt,
+    aspect_ratio: document.getElementById('mage-ar').value,
+    resolution: document.getElementById('mage-res').value,
+    reference_image: mageRefB64 || null
+  };
+  try {
+    const r = await api('/api/task/create', { method: 'POST', body: JSON.stringify(data) });
+    if (r.ok) { toast('Görsel üretimi başlatıldı!', 'success'); refreshTasks(); }
+    else toast(r.error || 'Hata', 'error');
+  } catch(e) { toast('Bağlantı hatası', 'error'); }
+}
+
+async function startWayinTask() {
+  const prompt = document.getElementById('wayin-prompt').value.trim();
+  if (!prompt) { toast('Prompt gerekli!', 'error'); return; }
+
+  const vt = document.getElementById('wayin-vtype').value;
+  const grp = document.getElementById('wayin-group').value;
+  const idx = parseInt(document.getElementById('wayin-model').value) || 0;
+  const m = wayinModels[vt]?.[grp]?.[idx];
+  if (!m) { toast('Model seçilmedi', 'error'); return; }
+
+  const inviteMode = document.getElementById('wayin-invite-toggle').classList.contains('on');
+  const inviteCount = parseInt(document.getElementById('wayin-invite-count').value) || 5;
+
+  const data = {
+    type: 'wayin',
+    model: m.model,
+    prompt: prompt,
+    video_type: vt,
+    ratio: document.getElementById('wayin-ratio').value,
+    resolution: document.getElementById('wayin-resolution').value,
+    duration: document.getElementById('wayin-duration').value,
+    generateAudio: document.getElementById('wayin-audio-toggle').classList.contains('on'),
+    camera_fixed: document.getElementById('wayin-camera-toggle').classList.contains('on'),
+    invite_mode: inviteMode,
+    invite_count: inviteCount,
+  };
+
+  if (vt === 'Görüntüden Videoya') {
+    data.start_frame = wayinStartB64 || null;
+    data.end_frame = wayinEndB64 || null;
+  }
+  if (vt === 'Referans Görselden Videoya') {
+    data.reference_images = wayinRefImages.filter(Boolean);
+  }
+
+  try {
+    const r = await api('/api/task/create', { method: 'POST', body: JSON.stringify(data) });
+    if (r.ok) { toast('Video üretimi başlatıldı!', 'success'); refreshTasks(); }
+    else toast(r.error || 'Hata', 'error');
+  } catch(e) { toast('Bağlantı hatası', 'error'); }
+}
+
+/* ── Task Polling & Rendering ─────── */
+function startTaskPolling() {
+  stopTaskPolling();
+  taskPollTimer = setInterval(refreshTasks, 5000);
+}
+function stopTaskPolling() {
+  if (taskPollTimer) { clearInterval(taskPollTimer); taskPollTimer = null; }
+}
+
+async function refreshTasks() {
+  try {
+    const tasks = await api('/api/tasks');
+    const hash = JSON.stringify(tasks.map(t => ({id:t.id,status:t.status,result_url:t.result_url})));
+    if (hash === lastTasksHash) return; // skip re-render if nothing changed
+    lastTasksHash = hash;
+    renderTasks(tasks);
+  } catch(e) { console.error('Tasks refresh error', e); }
+}
+
+function renderTasks(tasks) {
+  const grid = document.getElementById('tasks-grid');
+  if (!tasks.length) {
+    grid.innerHTML = '<div class="no-tasks"><div class="icon">🎬</div><p>Henüz görev yok. Sol panelden yeni bir üretim başlatın.</p></div>';
+    return;
+  }
+  grid.innerHTML = tasks.map(t => {
+    const statusBadge = `<span class="badge badge-${t.status}">${
+      {pending:'⏳ Bekliyor',running:'⚡ Çalışıyor',done:'✅ Tamamlandı',failed:'❌ Başarısız'}[t.status] || t.status
+    }</span>`;
+    const typeIcon = t.type === 'mage' ? '🖼️' : '🎥';
+    let mediaHtml = '';
+    if (t.status === 'done' && t.result_url) {
+      if (t.result_type === 'video') {
+        mediaHtml = `<video src="${proxyUrl(t.result_url)}" muted loop playsinline onmouseenter="this.play()" onmouseleave="this.pause()"></video>`;
+      } else {
+        mediaHtml = `<img src="${proxyUrl(t.result_url)}" alt="result" loading="lazy">`;
+      }
+    } else if (t.status === 'running') {
+      mediaHtml = `<div class="placeholder"><div class="task-spinner"></div><div style="margin-top:10px">Üretiliyor...</div></div>`;
+    } else if (t.status === 'failed') {
+      mediaHtml = `<div class="placeholder">❌ Başarısız</div>`;
+    } else {
+      mediaHtml = `<div class="placeholder">⏳ Bekliyor...</div>`;
+    }
+
+    const actions = [];
+    actions.push(`<button class="btn-icon" title="Loglar" onclick="showLogs('${t.id}')">📋</button>`);
+    actions.push(`<button class="btn-icon" title="Promptu Kopyala" onclick="copyText(\`${t.prompt?.replace(/`/g,"\\`").replace(/\\/g,"\\\\")}\`)">📄</button>`);
+    if (t.status === 'done' && t.result_url) {
+      actions.push(`<button class="btn-icon" title="Tam Ekran" onclick="openFullscreen('${t.result_url}','${t.result_type}')">🔍</button>`);
+      actions.push(`<a class="btn-icon" href="${proxyUrl(t.result_url)}" download title="İndir">📥</a>`);
+      if (t.result_type === 'image') {
+        actions.push(`<button class="btn-icon" title="Referans Olarak Kullan" onclick="useAsReference('${t.result_url}','image')">🔄</button>`);
+        actions.push(`<button class="btn-icon" title="Video İçin Kullan" onclick="useAsStartFrame('${t.result_url}')">🎥</button>`);
+      }
+    }
+    actions.push(`<button class="btn-icon" title="Sil" onclick="deleteTask('${t.id}')" style="color:var(--accent-red)">🗑️</button>`);
+
+    return `<div class="task-card">
+      <div class="task-card-media">${mediaHtml}</div>
+      <div class="task-card-body">
+        <div class="task-card-meta">${statusBadge} <span class="task-card-model">${typeIcon} ${t.model || ''}</span></div>
+        <div class="task-card-prompt">${escHtml(t.prompt || '')}</div>
+        <div class="task-card-actions">${actions.join('')}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+async function deleteTask(id) {
+  if (!confirm('Bu görevi silmek istediğinize emin misiniz?')) return;
+  await api(`/api/task/${id}`, { method: 'DELETE' });
+  toast('Görev silindi', 'info');
+  refreshTasks();
+}
+
+async function showLogs(id) {
+  document.getElementById('log-content').innerHTML = 'Yükleniyor...';
+  openModal('modal-logs');
+  try {
+    const r = await api(`/api/task/${id}/logs`);
+    document.getElementById('log-content').innerHTML = (r.logs || []).map(l => escHtml(l)).join('<br>') || 'Log yok';
+  } catch(e) {
+    document.getElementById('log-content').innerHTML = 'Log yüklenemedi';
+  }
+}
+
+/* ── Fullscreen View ──────────────── */
+function openFullscreen(url, type) {
+  const cont = document.getElementById('fullscreen-content');
+  if (type === 'video') {
+    cont.innerHTML = `<video src="${proxyUrl(url)}" controls autoplay muted style="max-width:95vw;max-height:95vh"></video>`;
+  } else {
+    cont.innerHTML = `<img src="${proxyUrl(url)}" alt="fullscreen" style="max-width:95vw;max-height:95vh">`;
+  }
+  document.getElementById('fullscreen-view').classList.add('open');
+}
+
+function closeFullscreen() {
+  document.getElementById('fullscreen-view').classList.remove('open');
+  document.getElementById('fullscreen-content').innerHTML = '';
+}
+
+/* ── Gallery ──────────────────────── */
+async function loadGallery() {
+  try {
+    const items = await api('/api/gallery');
+    renderGallery(items);
+  } catch(e) { console.error('Gallery error', e); }
+}
+
+function renderGallery(items) {
+  const grid = document.getElementById('gallery-grid');
+  if (!items.length) {
+    grid.innerHTML = '<div class="no-tasks"><div class="icon">🖼️</div><p>Galeri boş. Üretim tamamlandığında burada görünür.</p></div>';
+    return;
+  }
+  grid.innerHTML = items.map(item => {
+    let mediaHtml = '';
+    if (item.type === 'video') {
+      mediaHtml = `<video src="${proxyUrl(item.url)}" muted loop playsinline onmouseenter="this.play()" onmouseleave="this.pause()"></video>`;
+    } else {
+      mediaHtml = `<img src="${proxyUrl(item.url)}" alt="" loading="lazy">`;
+    }
+    return `<div class="gallery-card">
+      <div class="gallery-card-media">${mediaHtml}</div>
+      <div class="gallery-card-body">
+        <div class="gallery-card-prompt" onclick="copyText(\`${item.prompt?.replace(/`/g,'\\`').replace(/\\/g,'\\\\') || ''}\`)" title="Kopyalamak için tıklayın">${escHtml(item.prompt || '')}</div>
+        <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:8px">${item.type === 'video' ? '🎥' : '🖼️'} ${item.model || ''}</div>
+        <div class="gallery-card-actions">
+          <button class="btn-icon" title="Tam Ekran" onclick="openFullscreen('${item.url}','${item.type}')">🔍</button>
+          <a class="btn-icon" href="${proxyUrl(item.url)}" download title="İndir">📥</a>
+          <button class="btn-icon" title="Promptu Kopyala" onclick="copyText(\`${item.prompt?.replace(/`/g,'\\`').replace(/\\/g,'\\\\') || ''}\`)">📄</button>
+          ${item.type === 'image' ? `<button class="btn-icon" title="Referans Olarak Kullan" onclick="useAsReference('${item.url}','image')">🔄</button>
+          <button class="btn-icon" title="Video İçin Kullan" onclick="useAsStartFrame('${item.url}')">🎥</button>` : ''}
+          <button class="btn-icon" title="Sil" onclick="deleteGalleryItem('${item.id}')" style="color:var(--accent-red)">🗑️</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function deleteGalleryItem(id) {
+  if (!confirm('Bu öğeyi silmek istediğinize emin misiniz?')) return;
+  await api(`/api/gallery/${id}`, { method: 'DELETE' });
+  toast('Silindi', 'info');
+  loadGallery();
+}
+
+/* ── Prompts ──────────────────────── */
+async function loadPrompts() {
+  try {
+    const items = await api('/api/prompts');
+    renderPrompts(items);
+  } catch(e) { console.error('Prompts error', e); }
+}
+
+function renderPrompts(items) {
+  const list = document.getElementById('prompts-list');
+  if (!items.length) {
+    list.innerHTML = '<div class="no-tasks"><div class="icon">📝</div><p>Henüz kaydedilmiş prompt yok.</p></div>';
+    return;
+  }
+  list.innerHTML = items.map(p => `<div class="prompt-item">
+    <div style="flex:1">
+      ${p.label ? `<div class="prompt-label">${escHtml(p.label)}</div>` : ''}
+      <div class="prompt-text" onclick="copyText(\`${p.text.replace(/`/g,'\\`').replace(/\\/g,'\\\\')}\`)" title="Kopyalamak için tıklayın">${escHtml(p.text)}</div>
+    </div>
+    <div style="display:flex;gap:4px">
+      <button class="btn-icon" title="Mage Prompt'a Yaz" onclick="document.getElementById('mage-prompt').value=\`${p.text.replace(/`/g,'\\`').replace(/\\/g,'\\\\')}\`;switchTab('studio');toast('Prompt yazıldı','success')">🖼️</button>
+      <button class="btn-icon" title="Wayin Prompt'a Yaz" onclick="document.getElementById('wayin-prompt').value=\`${p.text.replace(/`/g,'\\`').replace(/\\/g,'\\\\')}\`;setEngine('wayin');switchTab('studio');toast('Prompt yazıldı','success')">🎥</button>
+      <button class="btn-icon" title="Kopyala" onclick="copyText(\`${p.text.replace(/`/g,'\\`').replace(/\\/g,'\\\\')}\`)">📄</button>
+      <button class="btn-icon" title="Sil" onclick="deletePrompt('${p.id}')" style="color:var(--accent-red)">🗑️</button>
+    </div>
+  </div>`).join('');
+}
+
+async function savePrompt() {
+  const text = document.getElementById('prompt-text').value.trim();
+  if (!text) { toast('Prompt metni gerekli!', 'error'); return; }
+  const label = document.getElementById('prompt-label').value.trim();
+  await api('/api/prompts', { method: 'POST', body: JSON.stringify({ text, label }) });
+  document.getElementById('prompt-text').value = '';
+  document.getElementById('prompt-label').value = '';
+  toast('Prompt kaydedildi!', 'success');
+  loadPrompts();
+}
+
+async function deletePrompt(id) {
+  await api(`/api/prompts/${id}`, { method: 'DELETE' });
+  toast('Prompt silindi', 'info');
+  loadPrompts();
+}
+
+/* ── Editor / Timeline ────────────── */
+async function openTimelineSourcePicker() {
+  openModal('modal-timeline-source');
+  const grid = document.getElementById('source-picker-grid');
+  grid.innerHTML = 'Yükleniyor...';
+  try {
+    const [tasks, gallery] = await Promise.all([api('/api/tasks'), api('/api/gallery')]);
+    const sources = [];
+    tasks.filter(t => t.status === 'done' && t.result_url).forEach(t => {
+      sources.push({ type: t.result_type, url: t.result_url, prompt: t.prompt });
+    });
+    gallery.forEach(g => {
+      if (!sources.find(s => s.url === g.url)) {
+        sources.push({ type: g.type, url: g.url, prompt: g.prompt });
+      }
+    });
+    if (!sources.length) {
+      grid.innerHTML = '<p style="color:var(--text-muted);padding:20px">Henüz tamamlanmış üretim yok.</p>';
+      return;
+    }
+    grid.innerHTML = sources.map((s, i) => {
+      if (s.type === 'video') {
+        return `<div class="source-item" onclick="addToTimeline(${i})" data-idx="${i}"><video src="${proxyUrl(s.url)}" muted></video></div>`;
+      }
+      return `<div class="source-item" onclick="addToTimeline(${i})" data-idx="${i}"><img src="${proxyUrl(s.url)}" alt=""></div>`;
+    }).join('');
+    window._timelineSources = sources;
+  } catch(e) {
+    grid.innerHTML = '<p style="color:var(--accent-red)">Yüklenemedi</p>';
+  }
+}
+
+function addToTimeline(idx) {
+  const src = window._timelineSources[idx];
+  if (!src) return;
+  timelineItems.push({ ...src });
+  renderTimeline();
+  closeModal('modal-timeline-source');
+  toast('Timeline\'a eklendi', 'success');
+}
+
+function removeFromTimeline(idx) {
+  timelineItems.splice(idx, 1);
+  renderTimeline();
+}
+
+function renderTimeline() {
+  const container = document.getElementById('timeline-items');
+  let html = timelineItems.map((item, i) => {
+    const media = item.type === 'video'
+      ? `<video src="${proxyUrl(item.url)}" muted></video>`
+      : `<img src="${proxyUrl(item.url)}" alt="">`;
+    return `<div class="timeline-item ${timelinePlayIdx === i ? 'active' : ''}" onclick="previewTimelineItem(${i})">
+      ${media}<button class="remove" onclick="event.stopPropagation();removeFromTimeline(${i})">✕</button>
+    </div>`;
+  }).join('');
+  html += `<div class="timeline-add" onclick="openTimelineSourcePicker()">+</div>`;
+  container.innerHTML = html;
+}
+
+function previewTimelineItem(idx) {
+  const item = timelineItems[idx];
+  if (!item) return;
+  timelinePlayIdx = idx;
+  renderTimeline();
+  const preview = document.getElementById('editor-preview');
+  if (item.type === 'video') {
+    preview.innerHTML = `<video src="${proxyUrl(item.url)}" controls autoplay muted style="width:100%;height:100%;object-fit:contain"></video>`;
+  } else {
+    preview.innerHTML = `<img src="${proxyUrl(item.url)}" alt="" style="width:100%;height:100%;object-fit:contain">`;
+  }
+}
+
+function playTimeline() {
+  if (!timelineItems.length) { toast('Timeline boş', 'error'); return; }
+  stopTimeline();
+  timelinePlayIdx = 0;
+  playCurrentItem();
+}
+
+function playCurrentItem() {
+  if (timelinePlayIdx >= timelineItems.length) { stopTimeline(); return; }
+  const item = timelineItems[timelinePlayIdx];
+  renderTimeline();
+  const preview = document.getElementById('editor-preview');
+  if (item.type === 'video') {
+    preview.innerHTML = `<video src="${proxyUrl(item.url)}" autoplay muted style="width:100%;height:100%;object-fit:contain" id="tl-video"></video>`;
+    const vid = document.getElementById('tl-video');
+    vid.onended = () => { timelinePlayIdx++; playCurrentItem(); };
+  } else {
+    preview.innerHTML = `<img src="${proxyUrl(item.url)}" alt="" style="width:100%;height:100%;object-fit:contain">`;
+    timelineTimer = setTimeout(() => { timelinePlayIdx++; playCurrentItem(); }, 3000);
+  }
+}
+
+function stopTimeline() {
+  if (timelineTimer) { clearTimeout(timelineTimer); timelineTimer = null; }
+  timelinePlayIdx = -1;
+  renderTimeline();
+}
+
+function exportTimeline() {
+  if (!timelineItems.length) { toast('Timeline boş', 'error'); return; }
+  toast('MP4 birleştirme sunucu tarafında henüz aktif değil. Önizleme kullanabilirsiniz.', 'info');
+}
+
+/* ── Gemma Chat ───────────────────── */
+async function loadChatHistory() {
+  try {
+    const msgs = await api('/api/gemma/history');
+    renderChat(msgs);
+  } catch(e) { console.error(e); }
+}
+
+function renderChat(msgs) {
+  const container = document.getElementById('chat-messages');
+  if (!msgs || !msgs.length) {
+    container.innerHTML = '<div class="chat-empty">Gemma ile sohbet etmeye başlayın 🚀</div>';
+    return;
+  }
+  container.innerHTML = msgs.map(m => {
+    const cls = m.role === 'user' ? 'user' : 'assistant';
+    const imgTag = m.image ? '<div class="img-tag">📎 Görsel eklendi</div>' : '';
+    return `<div class="chat-msg ${cls}">${escHtml(m.content)}${imgTag}</div>`;
+  }).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+function handleChatImage(input) {
+  if (!input.files[0]) return;
+  fileToBase64(input.files[0]).then(b64 => {
+    chatImageB64 = b64;
+    document.getElementById('chat-img-thumb').src = b64;
+    document.getElementById('chat-img-box').style.display = 'block';
+  });
+}
+
+function removeChatImage() {
+  chatImageB64 = null;
+  document.getElementById('chat-img-box').style.display = 'none';
+}
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+
+  // Immediately show user message
+  const container = document.getElementById('chat-messages');
+  if (container.querySelector('.chat-empty')) container.innerHTML = '';
+  const imgTag = chatImageB64 ? '<div class="img-tag">📎 Görsel eklendi</div>' : '';
+  container.innerHTML += `<div class="chat-msg user">${escHtml(msg)}${imgTag}</div>`;
+  container.innerHTML += `<div class="chat-msg assistant" id="chat-loading" style="opacity:0.6">Düşünüyor...</div>`;
+  container.scrollTop = container.scrollHeight;
+
+  try {
+    const r = await api('/api/gemma/chat', {
+      method: 'POST',
+      body: JSON.stringify({ message: msg, image: chatImageB64 || null })
+    });
+    const loadingEl = document.getElementById('chat-loading');
+    if (loadingEl) loadingEl.remove();
+    if (r.error) {
+      container.innerHTML += `<div class="chat-msg assistant" style="color:var(--accent-red)">${escHtml(r.error)}</div>`;
+    } else {
+      container.innerHTML += `<div class="chat-msg assistant">${escHtml(r.reply)}</div>`;
+    }
+    container.scrollTop = container.scrollHeight;
+  } catch(e) {
+    const loadingEl = document.getElementById('chat-loading');
+    if (loadingEl) loadingEl.remove();
+    container.innerHTML += `<div class="chat-msg assistant" style="color:var(--accent-red)">Bağlantı hatası</div>`;
+  }
+  removeChatImage();
+}
+
+async function clearChat() {
+  await api('/api/gemma/clear', { method: 'POST' });
+  document.getElementById('chat-messages').innerHTML = '<div class="chat-empty">Gemma ile sohbet etmeye başlayın 🚀</div>';
+  toast('Sohbet temizlendi', 'info');
+}
+
+/* ── Modals ───────────────────────── */
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.remove('open');
+  });
+});
+
+// ESC key closes modals and fullscreen
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+    closeFullscreen();
+  }
+});
+
+/* ── Init ─────────────────────────── */
+checkAuth();
+</script>
+</body>
+</html>
