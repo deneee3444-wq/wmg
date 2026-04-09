@@ -43,7 +43,7 @@ app.secret_key = os.urandom(24)
 # ═══════════════════════════════════════════════════════════════
 ADMIN_USERNAME = "admin"
 ADMIN_PASSWORD = "123"
-GEMMA_API_KEY  = "X"  # Kullanıcı sonra dolduracak
+GEMMA_API_KEY  = "AIzaSyB_UNdhSsbDB28PglEoOxwTYBUY9jOWVX0"  # Kullanıcı sonra dolduracak
 
 FIREBASE_API_KEY = "AIzaSyAzUV2NNUOlLTL04jwmUw9oLhjteuv6Qr4"
 BASE_EMAIL       = "stevecraftstory@gmail.com"
