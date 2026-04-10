@@ -47,7 +47,7 @@ ADMIN_PASSWORD = "123"
 import base64
 
 # Base64 formatındaki veri
-encoded_data = "QUl6YVN5Ql9VTmRoU3NiREIyOFBnbEVvT3h3VFlCVVk5ak9XVlgw"
+encoded_data = "QUl6YVN5Q0JKdDVobnBhQlhIMUh2WXN4bWNEVW43N1JJVmpvRzVR"
 
 # Veriyi decode etme (önce byte formatına çevrilir, sonra string'e decode edilir)
 decoded_bytes = base64.b64decode(encoded_data)
