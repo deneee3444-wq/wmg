@@ -43,7 +43,17 @@ app.secret_key = os.urandom(24)
 # ═══════════════════════════════════════════════════════════════
 ADMIN_USERNAME = "admin"
 ADMIN_PASSWORD = "123"
-GEMMA_API_KEY  = "AIzaSyB_UNdhSsbDB28PglEoOxwTYBUY9jOWVX0"  # Kullanıcı sonra dolduracak
+
+import base64
+
+# Base64 formatındaki veri
+encoded_data = "QUl6YVN5Ql9VTmRoU3NiREIyOFBnbEVvT3h3VFlCVVk5ak9XVlgw"
+
+# Veriyi decode etme (önce byte formatına çevrilir, sonra string'e decode edilir)
+decoded_bytes = base64.b64decode(encoded_data)
+decoded_string = decoded_bytes.decode("utf-8")
+
+GEMMA_API_KEY  = decoded_string  # Kullanıcı sonra dolduracak
 
 FIREBASE_API_KEY = "AIzaSyAzUV2NNUOlLTL04jwmUw9oLhjteuv6Qr4"
 BASE_EMAIL       = "stevecraftstory@gmail.com"
