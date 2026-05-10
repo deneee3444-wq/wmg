@@ -980,7 +980,7 @@ def api_gemma_chat():
     GEMMA_MESSAGES.append({"role": "user", "content": user_msg, "image": bool(image_b64)})
 
     try:
-        api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemma-4-26b-a4b-it:generateContent?key={GEMMA_API_KEY}"
+        api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemma-4-31b-it:generateContent?key={GEMMA_API_KEY}"
         payload = {"contents": [{"parts": parts}]}
         resp = requests.post(api_url, json=payload, timeout=60)
         resp.raise_for_status()
